@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: cp thinking framework
+# key: frame
+# --
+* given
+* restate problem
+* constrains
+* goals
+* analysis
+* algo

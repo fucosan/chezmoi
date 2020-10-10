@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ios
+# key: ios
+# --
+ios::sync_with_stdio(false);
+cin.tie(0);
+$0
+return 0;

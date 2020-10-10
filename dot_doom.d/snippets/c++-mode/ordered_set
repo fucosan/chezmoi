@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ordered set
+# uuid:
+# key: ordered_set
+# condition: t
+# --
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define ordered_set tree<array<int, 2>, null_type,less<array<int, 2>>, rb_tree_tag,tree_order_statistics_node_update>
+// usage  (*s.find_by_order(index))[0];

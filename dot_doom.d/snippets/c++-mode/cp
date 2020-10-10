@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: cp
+# key: cp 
+# --
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  $0
+}
