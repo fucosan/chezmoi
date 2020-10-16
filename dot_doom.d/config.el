@@ -32,7 +32,7 @@
 ;; doom-horizon
 ;; doom-moonlight
 ;;
-(setq doom-theme 'doom-moonlight)
+(setq doom-theme 'doom-monokai-classic)
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
@@ -100,9 +100,8 @@
 ;;(add-hook! 'python-mode-hook #'prettify-symbols-mode)
 (defun my-cc ()
   (c-set-style "gnu")
-  ;;(turn-off-smartparens-mode))
+  (turn-off-smartparens-mode))
 
-  )
 (add-hook! 'c++-mode-hook 'my-cc)
 ;;(add-hook! 'c++-mode-hook #'turn-off-smartparens-mode)
 ;;(add-hook! 'c++-mode-hook '(lambda () (c-set-style "gnu")))
