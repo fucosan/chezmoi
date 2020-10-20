@@ -61,6 +61,7 @@
 (setq-default c-basic-offset tab-width)
 (map! :leader "v" #'er/expand-region)
 (map! :leader "TAB" #'next-buffer)
+(map! :leader "cl" #'org-cycle-list-bullet)
 (map! :leader "j" #'avy-goto-char-timer)
 (setq-default line-spacing 0)
 
