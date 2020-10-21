@@ -63,8 +63,8 @@
 (map! :leader "TAB" #'next-buffer)
 (map! :leader "cl" #'org-cycle-list-bullet)
 (map! :leader "j" #'avy-goto-char-timer)
+(map! :leader "y" #'avy-copy-region)
 (setq-default line-spacing 0)
-
 ;; snipet
 ;;(setq yas-snippet-dirs '("~/emacsconfig/snippets"))
 ;; competitive programming
@@ -113,3 +113,6 @@
 ;;(setq! highlight-indent-guides-method 'bitmap)
 (eval-after-load 'vterm
   '(fullframe vterm quit-window))
+
+(setq avy-all-windows 'all-frames)
+(setq avy-timeout-seconds 0.3)
