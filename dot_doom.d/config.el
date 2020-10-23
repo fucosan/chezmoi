@@ -60,9 +60,12 @@
 (setq! evil-insert-state-cursor '(hbar . 4))
 (setq-default c-basic-offset tab-width)
 (map! :leader "v" #'er/expand-region)
-(map! :leader "TAB" #'next-buffer)
+;;(map! :leader "TAB" #'next-buffer)
 (map! :leader "cl" #'org-cycle-list-bullet)
 (map! :leader "j" #'avy-goto-char-timer)
+(map! :leader "2" #'next-buffer)
+(map! :leader "1" #'previous-buffer)
+
 (map! :leader "y" #'avy-copy-region)
 (setq-default line-spacing 0)
 ;; snipet
@@ -90,9 +93,22 @@
       (kmacro-lambda-form [escape ?\M-x ?s ?m ?a ?r ?t ?- ?c ?o ?m ?p ?i ?l ?e return return] 0 "%d"))
 (global-set-key (kbd "<f9>") 'compile-file)
 
-(fset 'open-term3
-   (kmacro-lambda-form [escape ?\M-x ?v ?t ?e ?r ?m return return ?c ?l ?e ?a ?r return ?r ?r] 0 "%d"))
-(global-set-key (kbd "<f8>") 'open-term3)
+;;(fset 'open-term3
+;;   (kmacro-lambda-form [escape ?\M-x ?v ?t ?e ?r ?m return return ?c ?l ?e ?a ?r return ?r ?r] 0 "%d"))
+;;(global-set-key (kbd "<f8>") 'open-term3)
+(defun vtermy (&optional buffer-name)
+  "Create a new vterm.
+
+If called with an argument BUFFER-NAME, the name of the new buffer will
+be set to BUFFER-NAME, otherwise it will be `vterm'"
+  (interactive)
+  (let ((buff-name (concat "vterm" (substring default-directory -2 -1))))
+    (when (not (get-buffer buff-name))
+    (with-current-buffer (get-buffer-create buff-name)
+      (vterm-mode)))
+  (switch-to-buffer buff-name)))
+(global-set-key (kbd "<f8>") 'vtermy)
+
 
 
 ;; python
@@ -104,6 +120,7 @@
   (turn-off-smartparens-mode))
 
 (add-hook! 'c++-mode-hook 'my-cc)
+(add-hook! 'centaur-tabs-mode-hook 'centaur-tabs-group-by-projectile-project)
 ;;(add-hook! 'c++-mode-hook #'turn-off-smartparens-mode)
 ;;(add-hook! 'c++-mode-hook '(lambda () (c-set-style "gnu")))
 (setq! highlight-indent-guides-method 'column)
@@ -116,3 +133,4 @@
 
 (setq avy-all-windows 'all-frames)
 (setq avy-timeout-seconds 0.3)
+(centaur-tabs-change-fonts "jetBrainsMono" 130)
