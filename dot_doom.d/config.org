@@ -1,0 +1,217 @@
+#+TITLE:
+#+DATE:    Oktober 29, 2020
+#+SINCE:   <replace with next tagged release version>
+#+STARTUP: inlineimages fold
+
+* basic tweak
+#+BEGIN_SRC emacs-lisp
+;;(org-babel-load-file (expand-file-name "~/.emacs.d/README.org")
+;; (define-key evil-normal-state-map (kbd "s") #'avy-goto-char-timer)
+(after! evil-snipe
+  (evil-snipe-mode -1))
+(setq user-full-name "fucosan"
+      user-mail-address "fucosan@yandex.com")
+
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+;; JetBrainsMono ExtraBold
+;; Source Code Pro Semibold
+
+(setq doom-font (font-spec :family "jetBrainsMono" :size 15))
+
+; doom-monokai-classic
+;; sanityinc-tomorrow-blue
+;; doom-horizon
+;; doom-moonlight
+;; doom-palenight
+(setq doom-theme 'doom-moonlight)
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+;;(load-file "~/emacsconfig/my-init.el")
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+;; here are some additional functions/macros that could help you configure Doom:
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+
+(setq display-line-numbers-type nil)
+(setq! evil-insert-state-cursor '(hbar . 4))
+(setq-default c-basic-offset tab-width)
+(setq-default line-spacing 0)
+
+#+END_SRC
+
+* keymap
+#+BEGIN_SRC emacs-lisp
+
+(map! :leader "2" #'next-buffer)
+(map! :leader "1" #'previous-buffer)
+;;(map! :leader "j" #'avy-goto-char-timer)
+(map! :leader "cl" #'org-cycle-list-bullet)
+(map! :leader "`" #'+workspace/cycle)
+(map! :leader ";" #'counsel-M-x)                         ;
+(map! :leader ":" #'eval-expression)
+(map! :leader "w;" #'delete-other-windows)
+(map! :leader "y" #'avy-copy-region)
+(define-key evil-normal-state-map (kbd "go") #'avy-goto-char-timer)
+#+END_SRC
+* competitive programming
+#+BEGIN_SRC emacs-lisp
+
+(defun bury-compile-buffer-if-successful (buffer string)
+  "bury a compilation buffer if succeeded without warnings "
+  (when (and
+         (buffer-live-p buffer)
+         (string-match "compilation" (buffer-name buffer))
+         (string-match "finished" string)
+         (not
+          (with-current-buffer buffer
+            (goto-char (point-min))
+            (search-forward "warning" nil t))))
+    (run-with-timer 1 nil
+                    (lambda (buf)
+                      (bury-buffer buf)
+                      (delete-windows-on buf))
+                    buffer)))
+
+(add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+
+(fset 'compile-file
+      (kmacro-lambda-form [escape ?\M-x ?s ?m ?a ?r ?t ?- ?c ?o ?m ?p ?i ?l ?e return return] 0 "%d"))
+(global-set-key (kbd "<f8>") 'compile-file)
+
+#+END_SRC
+* vterm
+#+BEGIN_SRC emacs-lisp
+
+(defun vtermy (&optional buffer-name)
+  "Create a new vterm.
+
+If called with an argument BUFFER-NAME, the name of the new buffer will
+be set to BUFFER-NAME, otherwise it will be `vterm'"
+  (interactive)
+  (let ((buff-name (concat "vterm" (substring default-directory -2 -1))))
+    (when (not (get-buffer buff-name))
+    (with-current-buffer (get-buffer-create buff-name)
+      (vterm-mode)))
+    (switch-to-buffer buff-name)
+    (evil-insert-state)))
+(global-set-key (kbd "<f7>") 'vtermy)
+
+#+END_SRC
+*
+* c++
+#+BEGIN_SRC emacs-lisp
+
+(defun my-cc ()
+  (setq visual-fill-column-center-text t)
+  (c-set-style "gnu")
+  (turn-off-smartparens-mode)
+  (visual-fill-column-mode 1))
+
+(add-hook! 'c++-mode-hook 'my-cc)
+
+
+#+END_SRC
+* tabs
+#+BEGIN_SRC emacs-lisp
+
+(add-hook! 'centaur-tabs-mode-hook 'centaur-tabs-group-by-projectile-project)
+(setq! highlight-indent-guides-method 'column)
+
+(setq centaur-tabs-set-bar 'over
+      centaur-tabs-set-icons t
+      ;;centaur-tabs-gray-out-icons 'buffer
+      centaur-tabs-height 24
+      centaur-tabs-set-modified-marker t
+      centaur-tabs-style "bar"
+      centaur-tabs-modified-marker "•")
+(map! :leader
+      :desc "Toggle tabs on/off"
+      "t c" #'centaur-tabs-local-mode)
+
+#+END_SRC
+* indent guides
+#+BEGIN_SRC emacs-lisp
+
+(setq! highlight-indent-guides-method 'column)
+
+#+END_SRC
+* avy
+
+#+BEGIN_SRC emacs-lisp
+
+(setq avy-all-windows 'all-frames)
+(setq avy-timeout-seconds 0.3)
+
+
+#+END_SRC
+* org
+#+BEGIN_SRC emacs-lisp
+
+(use-package! org
+  :config
+  (setq org-ellipsis " ▾")
+  )
+(use-package! org-bullets
+  :hook (org-mode . org-bullets-mode))
+
+(defun dw/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-mode
+  :defer t
+  :hook (org-mode . dw/org-mode-visual-fill))
+#+END_SRC
+
+#+RESULTS:
+* evil
+#+BEGIN_SRC emacs-lisp
+(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+#+END_SRC
+* latex
+#+BEGIN_SRC emacs-lisp
+(add-hook! latex-mode-hook (lambda () (flycheck-disabled-checkers)))
+
+#+END_SRC
+* tabnine
+#+BEGIN_SRC emacs-lisp
+;;(require 'company-tabnine)
+;;(add-to-list 'company-backends #'company-tabnine)
+;; Trigger completion immediately.
+;;(setq company-idle-delay 0)
+
+;; Number the candidates (use M-1, M-2 etc to select completions).
+;;(setq company-show-numbers t)
+#+END_SRC
+* vue
+#+begin_src emacs-lisp
+(add-hook 'vue-mode-hook #'lsp!)
+
+#+end_src
